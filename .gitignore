@@ -32,3 +32,5 @@ logs/
 
 # Misc
 .turbo/
+
+/generated/prisma
