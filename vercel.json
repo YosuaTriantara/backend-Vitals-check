@@ -1,15 +1,16 @@
 {
   "version": 2,
-  "buildCommand": "npx prisma migrate deploy && npx prisma generate"
-  "functions": {
-    "api/index.js": {
-      "maxDuration": 30
+  "buildCommand": "npx run dev",
+  "builds": [
+    {
+      "src": "src/server.js",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/api/index.js"
+      "dest": "/src/server.js"
     }
   ]
 }
