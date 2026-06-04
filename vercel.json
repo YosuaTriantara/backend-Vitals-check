@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npx prisma generate",
+  "buildCommand": "npx prisma migrate deploy && npx prisma generate"
   "functions": {
     "api/index.js": {
       "maxDuration": 30

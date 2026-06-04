@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const MODEL_API_URL = process.env.MODEL_API_URL;
+// Normalisasi URL — hilangkan trailing slash agar tidak jadi double slash saat concat
+const MODEL_API_URL = process.env.MODEL_API_URL?.replace(/\/+$/, "");
 
 // ---------------------------------------------------------------------------
 // Helpers
