@@ -100,13 +100,6 @@ GET    /education?category=low|medium|high  # Filter by risk category
 
 ---
 
-## 📚 Documentation Files
-
-- **[STRUCTURE.md](./STRUCTURE.md)** — Dokumentasi lengkap struktur folder & file explanations
-- **[VITALSCHECK_IMPLEMENTATION_GUIDE.md](../VITALSCHECK_IMPLEMENTATION_GUIDE.md)** — Overall project architecture & implementation guide
-
----
-
 ## 🛠️ Development
 
 ### Available Scripts
@@ -131,23 +124,6 @@ npx prisma studio
 npx prisma migrate reset
 ```
 
-### Common Issues
-
-**Error: `ECONNREFUSED` saat connect ke database**
-- Pastikan PostgreSQL berjalan
-- Pastikan DATABASE_URL benar di `.env`
-- Untuk Supabase, pastikan koneksi string lengkap dari dashboard
-
-**Error: `Module not found`**
-```bash
-# Reinstall dependencies
-rm -rf node_modules package-lock.json
-npm install
-npx prisma generate
-```
-
----
-
 ## 🏗️ Project Structure
 
 ```
@@ -169,8 +145,6 @@ backend/
 ├── package.json
 └── STRUCTURE.md                # Detailed documentation
 ```
-
-Lihat [STRUCTURE.md](./STRUCTURE.md) untuk dokumentasi lengkap setiap folder.
 
 ---
 
@@ -200,25 +174,6 @@ Token valid selama `JWT_EXPIRES_IN` (default 7 hari).
 
 ---
 
-## 🚀 Deployment
-
-### Render.com (Recommended)
-
-1. Push code ke GitHub
-2. Connect Render → pilih GitHub repo
-3. Set environment variables di Render dashboard
-4. Deploy ✅
-
-**Environment Variables untuk production**:
-```env
-NODE_ENV=production
-JWT_SECRET=<generated_random_secret>
-DATABASE_URL=<supabase_connection_string>
-MODEL_API_URL=https://vitalscheck-api.onrender.com
-```
-
----
-
 ## 📚 Tech Stack
 
 | Layer | Technology |
@@ -230,39 +185,3 @@ MODEL_API_URL=https://vitalscheck-api.onrender.com
 | **Auth** | JWT + bcryptjs |
 | **Validation** | Joi / Zod |
 | **HTTP Client** | Axios |
-
----
-
-## 🤝 Contributing
-
-1. Create feature branch: `git checkout -b feature/xyz`
-2. Commit changes: `git commit -m "Add xyz"`
-3. Push to GitHub: `git push origin feature/xyz`
-4. Create Pull Request
-
----
-
-## 📝 Notes
-
-**Model API Integration**:
-- Model API sedang return 503 di Render (cold start)
-- Backend sudah implement retry logic dengan 5s delay
-- Mock response bisa digunakan sementara hingga `/docs` Render aktif
-
-**Database Indexing**:
-- Pada production, add indices untuk query performa:
-  ```sql
-  CREATE INDEX idx_screenings_user_id ON screenings(user_id);
-  CREATE INDEX idx_screenings_created_at ON screenings(created_at DESC);
-  ```
-
----
-
-## 📞 Support
-
-Lihat dokumentasi lengkap di [STRUCTURE.md](./STRUCTURE.md) atau issue tracker di GitHub.
-
----
-
-**Last Updated**: May 21, 2026  
-**Maintained by**: CC26-PSU319 Team
