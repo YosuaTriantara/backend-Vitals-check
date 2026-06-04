@@ -34,3 +34,4 @@ logs/
 .turbo/
 
 /generated/prisma
+FRONTEND_API_DOCS.md

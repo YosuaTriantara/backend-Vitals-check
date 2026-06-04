@@ -1,8 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,40 +9,50 @@ datasource db {
   provider = "postgresql"
 }
 
-enum Gender{
+enum Gender {
   male
   female
 }
 
 model User {
-  id          String      @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
-  email       String      @unique
+  email       String    @unique
   password    String
-  isOnboarded Boolean     @default(false)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  isOnboarded Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   healthProfile HealthProfile?
-  screenings     Screening[]
+  screenings    Screening[]
 }
 
 model HealthProfile {
-  id            String    @id @default(cuid())
-  userId        String    @unique @map("user_id")
-  gender        Gender?
-  birthDate     DateTime? @map("birth_date")
-  age           Int?
-  heightCm      Float?    @map("height_cm")
-  weightKg      Float?    @map("weight_kg")
-  bmi           Float?
-  systolicBp    Int?      @map("systolic_bp")
-  diastolicBp   Int?      @map("diastolic_bp")
-  bloodGlucose  Float?    @map("blood_glucose")
-  lastScreeningId String? @map("last_screening_id")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-  deletedAt     DateTime? @map("deleted_at")
+  id       String  @id @default(cuid())
+  userId   String  @unique @map("user_id")
+  gender   Gender?
+  birthDate DateTime? @map("birth_date")
+  age      Int?
+  heightCm Float?  @map("height_cm")
+  weightKg Float?  @map("weight_kg")
+  bmi      Float?
+
+  // Lifestyle fields (nullable — profile mungkin dibuat sebelum ada screening)
+  genHlth           Int?     @map("gen_hlth")
+  mentHlth          Int?     @map("ment_hlth")
+  physHlth          Int?     @map("phys_hlth")
+  diffWalk          Boolean? @map("diff_walk")
+  cholCheck         Boolean? @map("chol_check")
+  smoker            Boolean?
+  physActivity      Boolean? @map("phys_activity")
+  fruits            Boolean?
+  veggies           Boolean?
+  hvyAlcoholConsump Boolean? @map("hvy_alcohol_consump")
+
+  lastScreeningId String?   @map("last_screening_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+  deletedAt       DateTime? @map("deleted_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -54,23 +62,37 @@ model HealthProfile {
 }
 
 model Screening {
-  id            String       @id @default(cuid())
-  userId        String       @map("user_id")
-  age           Int
-  gender        Gender
-  heightCm      Float        @map("height_cm")
-  weightKg      Float        @map("weight_kg")
-  bmi           Float
-  systolicBp    Int          @map("systolic_bp")
-  diastolicBp   Int          @map("diastolic_bp")
-  bloodGlucose  Float        @map("blood_glucose")
-  riskScore     Float        @map("risk_score")
-  riskCategory  String @map("risk_category")
-  rawPrediction Json?        @map("raw_prediction")
+  id       String @id @default(cuid())
+  userId   String @map("user_id")
+  age      Int
+  gender   Gender
+  heightCm Float  @map("height_cm")
+  weightKg Float  @map("weight_kg")
+  bmi      Float
 
-  createdAt     DateTime     @default(now()) @map("created_at")
-  updatedAt     DateTime     @updatedAt @map("updated_at")
-  deletedAt     DateTime?    @map("deleted_at")
+  // Penilaian kesehatan
+  genHlth  Int @map("gen_hlth")
+  mentHlth Int @map("ment_hlth")
+  physHlth Int @map("phys_hlth")
+
+  // Gaya hidup
+  diffWalk          Boolean @map("diff_walk")
+  cholCheck         Boolean @map("chol_check")
+  smoker            Boolean
+  physActivity      Boolean @map("phys_activity")
+  fruits            Boolean
+  veggies           Boolean
+  hvyAlcoholConsump Boolean @map("hvy_alcohol_consump")
+
+  // Hasil prediksi
+  riskScore    Float  @map("risk_score")
+  riskCategory String @map("risk_category")
+  predictions  Json?  @map("predictions")    // per-disease breakdown
+  rawPrediction Json? @map("raw_prediction") // full API response
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -82,16 +104,16 @@ model Screening {
 }
 
 model EducationContent {
-  id           String       @id @default(cuid())
-  title        String
-  content      String
-  category     String
-  order        Int          @default(0)
-  isActive     Boolean      @default(true) @map("is_active")
+  id       String  @id @default(cuid())
+  title    String
+  content  String
+  category String
+  order    Int     @default(0)
+  isActive Boolean @default(true) @map("is_active")
 
-  createdAt    DateTime     @default(now()) @map("created_at")
-  updatedAt    DateTime     @updatedAt @map("updated_at")
-  deletedAt    DateTime?    @map("deleted_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
 
   @@index([category])
   @@index([isActive])
